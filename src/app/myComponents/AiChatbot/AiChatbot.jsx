@@ -64,7 +64,7 @@ export default function AiChatbot() {
     copydata.push(inputValue);
     setUserData(copydata);
 
-    //  step 6(extra)
+    //  step 7(extra)
     // show typing till ai respond
     const showTyping = [...aiData];
     showTyping.push("typing...");
@@ -139,7 +139,7 @@ export default function AiChatbot() {
           // if enter key is pressed take input
           onKeyDown={(e) => {
             {
-              /* // step 7(extra)  */
+              /* // step 8(extra)  */
             }
             if (e.key === "Enter") {
               e.preventDefault(); // prevents new line
