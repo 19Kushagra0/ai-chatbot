@@ -1,59 +1,20 @@
-// ai chatbot in 5 step + 3 extra step
-
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-
+import Image from "next/image";
 import "@/app/myComponents/AiChatbot/AiChatbot.css";
-
+import ReactMarkdown from "react-markdown";
 export default function AiChatbot() {
   const [userData, setUserData] = useState([]);
   const [aiData, setAiData] = useState([]);
 
+  // input handler
   const [inputValue, setInputValue] = useState("");
-
-  // step 1
-  //   api key
-  const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-
-  // step 2
-  // ask Gemini
-  const sendMessageToGemini = async (userMessage, apiKey) => {
-    try {
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            contents: [
-              {
-                parts: [{ text: userMessage }],
-              },
-            ],
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      return (
-        data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-        "Error: No response from model."
-      );
-    } catch (e) {
-      return "Error connecting to Gemini API.";
-    }
-  };
-
   const inputHandler = (e) => {
     setInputValue(e.target.value);
   };
 
+  // input button
   const inputButton = async () => {
-    console.log(inputValue);
-
     // check if value is undefined
     if (inputValue.trim() === "") {
       return;
@@ -64,34 +25,42 @@ export default function AiChatbot() {
     copydata.push(inputValue);
     setUserData(copydata);
 
-    //  step 7(extra)
     // show typing till ai respond
     const showTyping = [...aiData];
     showTyping.push("typing...");
     setAiData(showTyping);
 
     setInputValue("");
+    console.log(inputValue);
+    let aiReply = "";
 
-    // step 3
-    // sending user data to gemini and getting its response
-    const aiReply = await sendMessageToGemini(inputValue, API_KEY);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        body: JSON.stringify({
+          message: "Data send to backend",
+          userResponse: inputValue,
+        }),
+      });
+      const data = await response.json();
+      aiReply = data.message;
+    } catch (error) {
+      console.log("failed to send data to backend");
+    }
 
-    // step 4
-
-    // saving gemini data
     const copyAi = [...aiData];
     copyAi.push(aiReply);
     setAiData(copyAi);
   };
-
-  //  step 6(extra) part 1 to 4
-  //  step 6(extra) part 1
+  // auto scroll down
+  //     step 6(extra) part 1 to 4
+  //  auto scroll(extra) part 1
   const messagesEndRef = useRef(null);
-  //  step 6(extra) part 2
+  //  auto scroll down(extra) part 2
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  //  step 6(extra) part 3
+  //  auto scroll down(extra) part 3
   useEffect(() => {
     scrollToBottom();
   }, [userData, aiData]);
@@ -100,6 +69,7 @@ export default function AiChatbot() {
   //   .aiChatbot-messages {
   //   overflow-y: auto;
   // }
+
   return (
     <div className="aiChatbot-full-container">
       {/* Header */}
@@ -118,17 +88,29 @@ export default function AiChatbot() {
               </div>
 
               <div className="message-row ai-row">
-                {/* step 5 */}
-                <div className="message-bubble ai-msg">{aiData[index]}</div>
+                <div className="message-bubble ai-msg">
+                  <ReactMarkdown>{aiData[index]}</ReactMarkdown>
+                </div>
               </div>
             </div>
           );
         })}
-        {/* // step 6(extra) part 4 */}
+        {/* // auto scroll down part 4 */}
         <div ref={messagesEndRef} className=""></div>
       </div>
       {/* Input Area */}
       <div className="aiChatbot-input-area">
+        {/* plus button */}
+        <button className="plus-button">
+          <Image
+            alt="asd"
+            height={40}
+            width={40}
+            src="/icon/add.svg"
+            className="plus-icon"
+          />
+        </button>
+
         {/* Textarea instead of Input */}
         <textarea
           placeholder="Ask me"
@@ -138,12 +120,13 @@ export default function AiChatbot() {
           onChange={inputHandler}
           // if enter key is pressed take input
           onKeyDown={(e) => {
-            {
-              /* // step 8(extra)  */
-            }
-            if (e.key === "Enter") {
-              e.preventDefault(); // prevents new line
-              inputButton(); // triggers your send function
+            // if (e.key === "Enter") {
+            //   e.preventDefault(); // prevents new line
+            //   inputButton(); // triggers your send function
+            // }
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault(); // stop new line
+              inputButton(); // send message
             }
           }}
         ></textarea>
