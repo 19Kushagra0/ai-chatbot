@@ -32,13 +32,34 @@
 
   background: rgba(28, 28, 30, 0.8);
 
-  /* background-color: transparent; */
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  justify-content: space-between;
+}
+.header-left {
+}
+.reset-btn {
+  padding: 5px 14px;
+  padding-bottom: 7px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+
+  background-color: red;
 }
 
+.reset-btn:hover {
+  background-color: rgb(255, 54, 54);
+}
+
+.header-right {
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: center;
+}
 .header-title {
   font-size: 15px;
   font-weight: 600;
