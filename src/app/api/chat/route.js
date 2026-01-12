@@ -67,10 +67,18 @@ export async function POST(req) {
 
     return NextResponse.json({
       message: aiText,
+      syncData: conversationData,
     });
   } catch (error) {
     console.log("Failed to send data to frontend");
 
     return NextResponse.json({ message: "Failed to send data to frontend" });
   }
+}
+export async function GET() {
+  return NextResponse.json({
+    conversationData,
+    aiValue: aiData,
+    userValue: userData,
+  });
 }
