@@ -82,3 +82,10 @@ export async function GET() {
     userValue: userData,
   });
 }
+export async function DELETE() {
+  aiData = [];
+  userData = [];
+  conversationData = [];
+
+  return NextResponse.json({ message: "Chat reset successfully" });
+}

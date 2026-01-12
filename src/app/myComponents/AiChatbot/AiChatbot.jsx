@@ -23,6 +23,18 @@ export default function AiChatbot() {
 
     fetchChat();
   }, []);
+  const resetChat = async () => {
+    try {
+      await fetch("/api/chat", {
+        method: "DELETE",
+      });
+
+      setUserData([]);
+      setAiData([]);
+    } catch (error) {
+      console.log("Failed to reset chat");
+    }
+  };
 
   // input handler
   const [inputValue, setInputValue] = useState("");
@@ -97,6 +109,11 @@ export default function AiChatbot() {
         <div className="header-left">
           <span className="header-title">Chat bot</span>
         </div>
+        <div className="header-right">
+          <button className="reset-btn" onClick={resetChat}>
+            Reset
+          </button>
+        </div>
       </div>
       {/* Messages Area */}
       <div className="aiChatbot-messages">
@@ -121,7 +138,7 @@ export default function AiChatbot() {
       {/* Input Area */}
       <div className="aiChatbot-input-area">
         {/* plus button */}
-        <button className="plus-button">
+        {/* <button className="plus-button">
           <Image
             alt="asd"
             height={40}
@@ -129,7 +146,7 @@ export default function AiChatbot() {
             src="/icon/add.svg"
             className="plus-icon"
           />
-        </button>
+        </button> */}
 
         {/* Textarea instead of Input */}
         <textarea
