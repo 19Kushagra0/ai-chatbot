@@ -7,6 +7,23 @@ export default function AiChatbot() {
   const [userData, setUserData] = useState([]);
   const [aiData, setAiData] = useState([]);
 
+  // restore chat
+  useEffect(() => {
+    const fetchChat = async () => {
+      try {
+        const res = await fetch("/api/chat");
+        const data = await res.json();
+
+        setUserData(data.userValue || []);
+        setAiData(data.aiValue || []);
+      } catch (err) {
+        console.log("Failed to load chat history");
+      }
+    };
+
+    fetchChat();
+  }, []);
+
   // input handler
   const [inputValue, setInputValue] = useState("");
   const inputHandler = (e) => {
@@ -51,7 +68,10 @@ export default function AiChatbot() {
     const copyAi = [...aiData];
     copyAi.push(aiReply);
     setAiData(copyAi);
+
+    console.log(aiData);
   };
+
   // auto scroll down
   //     step 6(extra) part 1 to 4
   //  auto scroll(extra) part 1
