@@ -125,9 +125,17 @@ export default function AiChatbot() {
               </div>
 
               <div className="message-row ai-row">
-                <div className="message-bubble ai-msg">
-                  <ReactMarkdown>{aiData[index]}</ReactMarkdown>
-                </div>
+                {aiData[index] === "typing..." ? (
+                  <div className="message-bubble ai-msg typing-bubble">
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                    <span className="typing-dot"></span>
+                  </div>
+                ) : (
+                  <div className="message-bubble ai-msg">
+                    <ReactMarkdown>{aiData[index]}</ReactMarkdown>
+                  </div>
+                )}
               </div>
             </div>
           );
